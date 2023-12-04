@@ -7,8 +7,6 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,7 +21,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.StressOverflow.R;
@@ -31,7 +28,6 @@ import com.example.StressOverflow.Tag.Tag;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipDrawable;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
@@ -40,9 +36,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * Dialog fragment that allows input for filtering and sorting
- */
 public class FilterItemsFragment extends DialogFragment {
 
     private FilterItemsFragment.OnFragmentInteractionListener listener;
@@ -60,8 +53,6 @@ public class FilterItemsFragment extends DialogFragment {
     private MaterialButtonToggleGroup sortField;
     private MaterialButtonToggleGroup sortOrder;
     private Button sortAsc;
-
-    private Drawable textview_design;
 
     /**
      * Constructor for passing in variables from the activity
@@ -96,7 +87,7 @@ public class FilterItemsFragment extends DialogFragment {
     }
 
     /**
-     * Displays and configures all the dialog box components for filtering.
+     * Displays and configures all the dialog box components.
      * @param savedInstanceState The last saved instance state of the Fragment,
      * or null if this is a freshly created Fragment.
      *
@@ -117,8 +108,6 @@ public class FilterItemsFragment extends DialogFragment {
         this.sortOrder = view.findViewById(R.id.fragment_filter_items_sort_order_buttongroup);
         this.sortAsc = view.findViewById(R.id.fragment_filter_items_asc_sort_button);
 
-        textview_design = ContextCompat.getDrawable(this.getContext(), R.drawable.sagi_textview);
-
         setupKeywordInput();
 
         setupDateInputListener(this.startDateInput);
@@ -135,7 +124,7 @@ public class FilterItemsFragment extends DialogFragment {
             .setView(view)
             .setTitle("Filter")
             .setNegativeButton("Cancel", null)
-            .setPositiveButton("Filter/Sort", (dialog, which) -> {
+            .setPositiveButton("Filter", (dialog, which) -> {
                 Map<String, ArrayList<String>> filterConds = new HashMap<String, ArrayList<String>>();
                 filterConds.put("keywords", getCheckedChips(this.keywordChips));
                 filterConds.put("dates", getDateInputs());
@@ -158,25 +147,14 @@ public class FilterItemsFragment extends DialogFragment {
     }
 
     /**
-     * Changes the background and text color, as well as radius, to match rest of application.
-     * @param chip chip to change layout of
-     */
-    private void format_chips(Chip chip) {
-        chip.setChipBackgroundColorResource(R.color.sagi);
-        chip.setTextColor(Color.WHITE);
-        chip.setChipCornerRadius(10);
-    }
-
-    /**
-     * Gets all description words for autocompleting in the text edit. Also sets up a chip when
-     * ENTER is pressed to add to the list of keyword filters.
+     *
      */
     private void setupKeywordInput() {
         // Autocorrect based on item descriptions
         ArrayList<String> keywords;
         keywords = new ArrayList<String>();
         for (int i = 0; i < this.itemAdapter.getCount(); i++) {
-            String[] descriptionWords = Objects.requireNonNull(this.itemAdapter.getItem(i)).getDescription().toLowerCase().replaceAll("[^\\sa-zA-Z0-9]", "").split(" ");
+            String[] descriptionWords = Objects.requireNonNull(this.itemAdapter.getItem(i)).getDescription().split(" ");
             for (String descriptionWord : descriptionWords) {
                 if (!keywords.contains(descriptionWord)) {
                     keywords.add(descriptionWord);
@@ -193,7 +171,6 @@ public class FilterItemsFragment extends DialogFragment {
                 // Add chip if user hits enter
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     Chip chip = new Chip(getContext());
-                    format_chips(chip);
                     chip.setText(keywordInput.getText());
                     chip.setCloseIconVisible(true);
                     chip.setCheckable(true);
@@ -209,10 +186,6 @@ public class FilterItemsFragment extends DialogFragment {
         });
     }
 
-    /**
-     * Sets up text edits to open a date picking dialog box when clicked on.
-     * @param dateInput editText field to add dialog to
-     */
     private void setupDateInputListener(EditText dateInput) {
         dateInput.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,14 +206,8 @@ public class FilterItemsFragment extends DialogFragment {
         });
     }
 
-    /**
-     * Adds a single unactivated, checkable chip to a chip group.
-     * @param chipLabel test to put on chip
-     * @param group chip group to place chip in
-     */
     private void setupChip(String chipLabel, ChipGroup group) {
         Chip chip = new Chip(getContext());
-        this.format_chips(chip);
         chip.setText(chipLabel);
         chip.setCheckedIconVisible(true);
         chip.setCheckable(true);
@@ -250,9 +217,6 @@ public class FilterItemsFragment extends DialogFragment {
         group.addView(chip);
     }
 
-    /**
-     * Gets all items' makes and adds them to the chip group
-     */
     private void setupMakesChipGroup() {
         ArrayList<String> makes;
         makes = new ArrayList<String>();
@@ -265,10 +229,6 @@ public class FilterItemsFragment extends DialogFragment {
         this.makeChips.setSingleSelection(true);
     }
 
-    /**
-     * Sets up the check all checkbox to check all chips in the chip group. Also gets all tags and
-     * adds them to the chip group.
-     */
     private void setupTagChipGroup() {
         // Check all listener
         this.checkAllTags.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -295,29 +255,19 @@ public class FilterItemsFragment extends DialogFragment {
         }
     }
 
-    /**
-     * Sets up button linking between sortField (sorting target) and sortOrder button groups. When
-     * a sort target is selected, the sort order button appears and disappears if no target is
-     * selected
-     */
     private void setupSortListeners() {
-        // Makes sort order button visible depending on whether a sort target is selected or not
         sortField.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
-            // If a sort target is selected and there wasn't a target previously
             if (isChecked && sortOrder.getVisibility()==View.INVISIBLE) {
                 sortOrder.setVisibility(View.VISIBLE);
-                // If the sort order has not been initialized, automatically set to ascending
                 if (sortOrder.getCheckedButtonIds().size()==0) {
                     sortAsc.setActivated(true);
                     sortAsc.performClick();
                 }
-            // If there's no sort option selected
             } else if (group.getCheckedButtonIds().size()==0){
                 sortOrder.setVisibility(View.INVISIBLE);
             }
         });
 
-        // Makes sort order mandatory by not allowing button un-clicking
         sortOrder.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (group.getCheckedButtonIds().size()==0 && group.getVisibility()==View.VISIBLE) {
                 Button button = view.findViewById(checkedId);
@@ -327,11 +277,6 @@ public class FilterItemsFragment extends DialogFragment {
         });
     }
 
-    /**
-     * Gets all the checked chips in the given chip group
-     * @param group chip group to get checked chips from
-     * @return array list of checked chips in group
-     */
     private ArrayList<String> getCheckedChips(ChipGroup group) {
         ArrayList<String> chips = new ArrayList<String>();
         for (int chipId : group.getCheckedChipIds()) {
@@ -341,11 +286,6 @@ public class FilterItemsFragment extends DialogFragment {
         return chips;
     }
 
-    /**
-     * Gets both the date inputs.
-     * @return arraylist of length 2 where the first item is the start date and the second is the
-     *         end date. Adds a empty string if no date input is given.
-     */
     private ArrayList<String> getDateInputs() {
         ArrayList<String> inputs = new ArrayList<String>();
         inputs.add(this.startDateInput.getText().toString());
