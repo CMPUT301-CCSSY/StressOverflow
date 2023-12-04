@@ -50,11 +50,11 @@ public class TestSignUpActivity {
         onView(withId(R.id.username_field)).perform(ViewActions.typeText("Sagi"));
         onView(withId(R.id.password_field)).perform(closeSoftKeyboard());
         onView(withId(R.id.email_field)).perform(ViewActions.typeText("test@test.com"));
-        onView(withId(R.id.password_field)).perform(closeSoftKeyboard());
+        onView(withId(R.id.email_field)).perform(closeSoftKeyboard());
         onView(withId(R.id.password_field)).perform(ViewActions.typeText("testing"));
         onView(withId(R.id.password_field)).perform(closeSoftKeyboard());
         onView(withId(R.id.reenter_password_field)).perform(ViewActions.typeText("testing"));
-        onView(withId(R.id.password_field)).perform(closeSoftKeyboard());
+        onView(withId(R.id.reenter_password_field)).perform(closeSoftKeyboard());
 
         onView(withId(R.id.sign_up_button)).perform(click());
         try {
