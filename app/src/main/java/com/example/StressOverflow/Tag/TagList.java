@@ -21,6 +21,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * Holds all the tag objects on the listview
+ */
 public class TagList extends AppCompatActivity implements AddTagFragment.OnFragmentInteractionListener {
     ArrayList<Tag> tagList = new ArrayList<>();
     Button addTag_button;
@@ -53,7 +56,7 @@ public class TagList extends AppCompatActivity implements AddTagFragment.OnFragm
         tagAdapter = new TagListAdapter(TagList.this, tagList);
         tagListView.setAdapter(tagAdapter);
 
-        //displays on tagList Activity
+        //displays tags that belong to the user on tagList Activity
         tagRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot querySnapshots,
@@ -66,6 +69,7 @@ public class TagList extends AppCompatActivity implements AddTagFragment.OnFragm
                     tagList.clear();
                     for (QueryDocumentSnapshot doc: querySnapshots) {
                         String ownerNameTagName = doc.getId();
+                        //Checks that the username is valid
                         if (!ownerNameTagName.isEmpty() && ownerNameTagName.contains(":")){
                             String[] parts = ownerNameTagName.split(":");
                             String tagName = parts[1];
@@ -74,9 +78,8 @@ public class TagList extends AppCompatActivity implements AddTagFragment.OnFragm
                                 tagList.add(new Tag(tagName));
                             }
                         }
-
+                        AppGlobals.getInstance().setAllTags(tagList);
                     }
-                    AppGlobals.getInstance().setAllTags(tagList);
                     tagAdapter.notifyDataSetChanged();
                 }
             }

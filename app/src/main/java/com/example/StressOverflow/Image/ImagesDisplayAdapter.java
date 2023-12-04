@@ -14,6 +14,8 @@ import androidx.annotation.Nullable;
 import com.example.StressOverflow.R;
 
 import java.util.ArrayList;
+
+import com.example.StressOverflow.Util;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -55,7 +57,24 @@ public class ImagesDisplayAdapter extends ArrayAdapter<Image> {
 
         Image image = images.get(position);
         ImageView imageView = view.findViewById(R.id.image);
-        Image.displayImage(image, imageView);
+
+        if (image.getURL() == null) {
+            if (image.getBitmap() != null) {
+                imageView.setImageBitmap(image.getBitmap());
+            } else {
+                Util.showShortToast(context, "Error: No URL or Bitmap found");
+            }
+        } else {
+            String url = new String(image.getURL());
+            try {
+                Picasso.get()
+                        .load(url)
+                        .error(R.drawable.ic_error_image)
+                        .into(imageView);
+            } catch (Exception e) {
+                Log.d("IMAGES", "Unexpected error displaying URL.", e);
+            }
+        }
 
         return view;
     }

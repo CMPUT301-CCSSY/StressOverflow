@@ -23,6 +23,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import kotlin.NotImplementedError;
@@ -40,7 +41,7 @@ public class Item {
     private ArrayList<Tag> tags = new ArrayList<Tag>();
     private ArrayList<String> pictureURLs = new ArrayList<>();
     private ArrayList<Image> pictures = new ArrayList<>();
-    private Integer serial;
+    private String serial;
     private String owner;
 
     public Item() {}
@@ -55,7 +56,7 @@ public class Item {
             String comments,
             ArrayList<Tag> tags,
             ArrayList<String> pictureURLs,
-            Integer serial,
+            String serial,
             String owner
     ) {
         this.id = UUID.randomUUID();
@@ -83,7 +84,7 @@ public class Item {
             String comments,
             ArrayList<Tag> tags,
             ArrayList<String> pictureURLs,
-            Integer serial,
+            String serial,
             String owner
     ) {
         this.id = uuid;
@@ -101,9 +102,7 @@ public class Item {
     }
 
     public void setName(String name) throws IllegalArgumentException {
-        if (name.equals("")) {
-            throw new IllegalArgumentException("empty name not allowed");
-        } else if (name.length() > Util.MAX_ITEM_NAME_LENGTH) {
+        if (name.length() > Util.MAX_ITEM_NAME_LENGTH) {
             throw new IllegalArgumentException(String.format("name exceeds maximum name length (%d)", Util.MAX_ITEM_NAME_LENGTH));
         }
         this.name = name;
@@ -113,6 +112,9 @@ public class Item {
         return this.id;
     }
     public String getName() {
+        if (Objects.equals(this.name, "")) {
+            return "Untitled item";
+        }
         return this.name;
     }
 
@@ -166,7 +168,7 @@ public class Item {
     public String getDateAsString() {
         return String.format("%s/%s/%s",
                 this.getDate().get(Calendar.YEAR),
-                this.getDate().get(Calendar.MONTH) + 1,
+                this.getDate().get(Calendar.MONTH),
                 this.getDate().get(Calendar.DATE)
         );
     }
@@ -176,7 +178,7 @@ public class Item {
     }
 
     public String getDateMonth() {
-        return String.format("%s", this.getDate().get(Calendar.MONTH) + 1);
+        return String.format("%s", this.getDate().get(Calendar.MONTH));
     }
 
     public String getDateDate() {
@@ -192,9 +194,6 @@ public class Item {
      * @return image objects
      */
     public ArrayList<Image> getPictures() {
-        if (pictures == null) {
-            setPictures(new ArrayList<>());
-        }
         return pictures;
     }
 
@@ -203,13 +202,10 @@ public class Item {
      * @return URLs of images
      */
     public ArrayList<String> getPictureURLs() {
-        if (pictures.size() == 0) {
-            setPictureURLs(new ArrayList<>());
-        }
         return pictureURLs;
     }
 
-    public Integer getSerial() {
+    public String getSerial() {
         return this.serial;
     }
 
@@ -234,6 +230,13 @@ public class Item {
             return 0.0d;
         }
         return this.value;
+    }
+
+    public String getValueAsString() {
+        if (this.value == null) {
+            return "No value";
+        }
+        return String.format("$%.2f", this.value);
     }
 
     public String getComments() {
@@ -267,43 +270,36 @@ public class Item {
      */
     public void setPictureURLs(ArrayList<String> pictureURLs) {
         this.pictureURLs = pictureURLs;
-        ArrayList<Image> newImages = new ArrayList<>();
-        for (String url : pictureURLs) {
-            newImages.add(new Image(url));
-        }
-        setPictures(newImages);
+        refreshPictures();
     }
 
     /**
      * Set image objects attached to item.
-     * Should only be used by setPictureURLs().
+     * Warning: does not up date URLs
      * @param pictures image objects
      */
-    private void setPictures(ArrayList<Image> pictures) {
+    public void setPictures(ArrayList<Image> pictures) {
         this.pictures = pictures;
     }
 
     /**
-     * TODO: Should we allow duplicate images here??
      * Add URLs of images attached to item and add Image objects with the URLs.
      * @param pictureURLs URLs (strings) of pictures in storage
      */
     public void addPictureURLs(@NonNull ArrayList<String> pictureURLs) {
         this.pictureURLs.addAll(pictureURLs);
-        ArrayList<Image> newImages = new ArrayList<>();
-        for (String url : pictureURLs) {
-            newImages.add(new Image(url));
-        }
-        addPictures(newImages);
+        refreshPictures();
     }
 
     /**
-     * Add image objects attached to item.
-     * Should only be used by addPictureURLs().
-     * @param pictures image objects
+     * Refresh such that item.pictures corresponds with item.pictureURLs
      */
-    private void addPictures(ArrayList<Image> pictures) {
-        this.pictures.addAll(pictures);
+    public void refreshPictures() {
+        ArrayList<Image> newImages = new ArrayList<>();
+        for (String url : getPictureURLs()) {
+            newImages.add(new Image(url));
+        }
+        setPictures(newImages);
     }
 
     public void setMake(String make) {
@@ -323,6 +319,9 @@ public class Item {
     }
 
     public void setValue(Double value) throws IllegalArgumentException {
+        if (value == null) {
+            value = 0.0d;
+        }
         if (value < 0.0d) {
             throw new IllegalArgumentException(String.format("negative value not allowed for item %s", this.getName()));
         }
@@ -361,7 +360,7 @@ public class Item {
         this.tags.removeAll(tags);
     }
 
-    public void setSerial(int serial) {
+    public void setSerial(String serial) {
         this.serial = serial;
     }
 
@@ -432,7 +431,7 @@ public class Item {
                     (String) data.get("comments"),
                     tags,
                     pictureURLs,
-                    ((Long) data.get("serial")).intValue(),
+                    data.get("serial").toString(),
                     (String) data.get("owner")
             );
             return out;

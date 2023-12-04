@@ -29,6 +29,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+/**
+ * Displays the tags on the listview
+ */
 public class TagListAdapter extends ArrayAdapter<Tag> {
     private ArrayList<Tag> tags;
     private Context context;
@@ -81,6 +84,8 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
             @Override
             public void onClick(View v) {
                 String tagName = tag.getTagName();
+
+                // to delete the tag
                 for (Tag t: tags){
                     if (tagName.equals(t.getTagName())){
                         tags.remove(t);
@@ -95,6 +100,10 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
                                         throw new RuntimeException("Error with item deletion into collection items: ", e);
                                     }
                                 });
+
+                        /**
+                         * Delete items that have that tag
+                         */
                         CollectionReference items = db.collection("items");
                         Query query = items.whereEqualTo("owner", ownerName).whereArrayContains("tags", tagName);
                         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -129,8 +138,6 @@ public class TagListAdapter extends ArrayAdapter<Tag> {
 
         return convertView;
     }
-
-
 
 
     /**
