@@ -18,7 +18,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.example.StressOverflow.R;
-import com.example.StressOverflow.Util;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -27,10 +26,11 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 /**
- * An image that can be displayed using a bitmap
- * or a download URL
+ * Represents an image which is displayed and stored using a Bitmap
+ * and an id
  */
 public class Image {
+    private UUID id;
     private Bitmap bitmap;
     private String URL;
 
@@ -41,7 +41,6 @@ public class Image {
      */
     public Image(Bitmap bitmap) {
         this.bitmap = bitmap;
-        this.URL = null;
     }
 
     /**
@@ -50,14 +49,13 @@ public class Image {
      */
     public Image(String URL) {
         this.URL = URL;
-        this.bitmap = null;
     }
 
     /**
      * Listener interface for when an image has been uploaded
      */
     public interface OnImageUploadedListener {
-        void onImageUploaded(String downloadUrl, int insert_index);
+        void onImageUploaded(String downloadUrl);
         void onUploadFailure(Exception e);
     }
 
@@ -85,6 +83,22 @@ public class Image {
     }
 
     /**
+     * Get id
+     * @return id of image
+     */
+    public UUID getId() {
+        return id;
+    }
+
+    /**
+     * Set id of image
+     * @param id of image
+     */
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    /**
      * Get bitmap of image. Can be used to display image.
      * @return bitmap of image
      */
@@ -100,17 +114,21 @@ public class Image {
         this.bitmap = bitmap;
     }
 
+
+    // STATIC METHODS
+
     /**
-     * Sets an ImageView to display Image object.
+     * Sets an ImageView to display an Image object.
+     * @param image Image of picture
      * @param imageView where to display picture
      */
-    public void displayImage(ImageView imageView) {
-        if (getURL() == null) {
-            imageView.setImageBitmap(getBitmap());
+    public static void displayImage(Image image, ImageView imageView) {
+        if (image.getURL() == null) {
+            imageView.setImageBitmap(image.getBitmap());
         } else {
             try {
                 Picasso.get()
-                        .load(getURL())
+                        .load(image.getURL())
                         .error(R.drawable.ic_error_image)
                         .into(imageView);
             } catch (Exception e) {
@@ -118,9 +136,6 @@ public class Image {
             }
         }
     }
-
-
-    // STATIC METHODS
 
     /**
      * Get all URLs of pictures from an Item as a Firebase object.
@@ -156,25 +171,19 @@ public class Image {
     public static void uploadPictures(ArrayList<Image> pictures, OnAllImagesUploadedListener listener) {
         ArrayList<Bitmap> bitmaps = new ArrayList<>();
         ArrayList<String> downloadURLs = new ArrayList<>();
-        int insert_index = 0;
 
         // Upload each Bitmap to Storage and get URL
         for (Image image : pictures) {
-
             if (image.getURL() != null) {
                 // already uploaded
-                String url = new String(image.getURL());
-                downloadURLs.add(url);
-                insert_index++;
+                downloadURLs.add(image.getURL());
             }
             else {
                 Bitmap bitmap = image.getBitmap();
-                int copy_index = 0 + insert_index; // trust me, do not change this
-                insert_index++;
-                uploadBitmapToStorage(bitmap, copy_index, new OnImageUploadedListener() {
+                uploadBitmapToStorage(bitmap, new OnImageUploadedListener() {
                     @Override
-                    public void onImageUploaded(String downloadUrl, int index) {
-                        downloadURLs.add(index, downloadUrl);
+                    public void onImageUploaded(String downloadUrl) {
+                        downloadURLs.add(downloadUrl);
 
                         if (downloadURLs.size() == pictures.size()) {
                             listener.onAllImagesUploaded(downloadURLs);
@@ -199,7 +208,7 @@ public class Image {
      * @param bitmap bitmap of picture
      * @param listener for when picture is done uploading
      */
-    public static void uploadBitmapToStorage(Bitmap bitmap, int insert_index, OnImageUploadedListener listener) {
+    public static void uploadBitmapToStorage(Bitmap bitmap, OnImageUploadedListener listener) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
@@ -216,7 +225,7 @@ public class Image {
                 storageRef.getDownloadUrl().addOnCompleteListener(downloadUrlTask -> {
                     if (downloadUrlTask.isSuccessful()) {
                         String downloadUrl = downloadUrlTask.getResult().toString();
-                        listener.onImageUploaded(downloadUrl, insert_index);
+                        listener.onImageUploaded(downloadUrl);
                     } else {
                         listener.onUploadFailure(downloadUrlTask.getException());
                     }

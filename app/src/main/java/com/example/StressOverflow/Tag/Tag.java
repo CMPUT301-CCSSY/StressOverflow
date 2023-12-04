@@ -10,9 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * model for object Tag
- */
 public class Tag implements Serializable {
     private String tagName;
 
@@ -53,11 +50,6 @@ public class Tag implements Serializable {
         return data;
     }
 
-    /**
-     * Comparator for tags
-     * @param obj object to be compared
-     * @return boolean, whether or not the two objects are the same
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

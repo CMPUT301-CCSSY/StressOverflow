@@ -99,7 +99,7 @@ public class TagItemTest {
 
         ArrayList<Tag> emptyTagArrayList = new ArrayList<>();
         item = new Item("deleteItemTest","make","model","description", new GregorianCalendar(),77.00, "Comments",emptyTagArrayList,images,
-                "123456", AppGlobals.getInstance().getOwnerName());
+                123456, AppGlobals.getInstance().getOwnerName());
         itemRef.document(item.getId().toString())
                 .set(item.toFirebaseObject())
                 .addOnFailureListener(new OnFailureListener() {
@@ -172,7 +172,7 @@ public class TagItemTest {
     @Test
     public void addTagAndBack(){
         //checks that addTag by long selecting opens up TagList Activity
-        int listViewId = R.id.activity_item_list_item_list;
+        int listViewId = R.id.activity__item__list__item__list;
         SystemClock.sleep(2000);
 
         onData(Matchers.anything())
@@ -180,8 +180,8 @@ public class TagItemTest {
                 .atPosition(0)
                 .onChildView(withId(R.id.listview__item__title))
                 .perform(longClick());
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_tag_button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_tag_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.activity__item__list__add__tag__button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        onView(ViewMatchers.withId(R.id.activity__item__list__add__tag__button)).perform(click());
         onView(ViewMatchers.withId(R.id.fragment_add_tag_to_item_make_new_tag_button)).perform(click());
         onView(ViewMatchers.withId(R.id.activity_tag_list_listView)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
         //return back to dialog
@@ -194,13 +194,13 @@ public class TagItemTest {
         onView(ViewMatchers.withId(R.id.activity_item_list_show_tags_button)).perform(click());
         onView(ViewMatchers.withId(R.id.activity_tag_list_listView)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
         onView(ViewMatchers.withId(R.id.activity_tag_list_back_button)).perform(click());
-        onView(ViewMatchers.withId(R.id.activity_item_list_item_list)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        onView(ViewMatchers.withId(R.id.activity__item__list__item__list)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
     }
 
     @Test
     public void addTags(){
-        int listViewId = R.id.activity_item_list_item_list;
+        int listViewId = R.id.activity__item__list__item__list;
         SystemClock.sleep(2000);
 
         onData(Matchers.anything())
@@ -208,8 +208,8 @@ public class TagItemTest {
                 .atPosition(0)
                 .onChildView(withId(R.id.listview__item__title))
                 .perform(longClick());
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_tag_button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_tag_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.activity__item__list__add__tag__button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        onView(ViewMatchers.withId(R.id.activity__item__list__add__tag__button)).perform(click());
         int chipGroupID = R.id.fragment_add_tag_to_item_tag_chipGroup;
 
         onView(allOf(withText(testTagName), isDescendantOfA(withId(chipGroupID))))
@@ -253,7 +253,7 @@ public class TagItemTest {
 
     @Test
     public void addDuplicateTag(){
-        int listViewId = R.id.activity_item_list_item_list;
+        int listViewId = R.id.activity__item__list__item__list;
         SystemClock.sleep(2000);
 
         onData(Matchers.anything())
@@ -261,8 +261,8 @@ public class TagItemTest {
                 .atPosition(0)
                 .onChildView(withId(R.id.listview__item__title))
                 .perform(longClick());
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_tag_button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_tag_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.activity__item__list__add__tag__button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        onView(ViewMatchers.withId(R.id.activity__item__list__add__tag__button)).perform(click());
         int chipGroupID = R.id.fragment_add_tag_to_item_tag_chipGroup;
 
         onView(allOf(withText(testTagName), isDescendantOfA(withId(chipGroupID))))
@@ -276,7 +276,7 @@ public class TagItemTest {
                 .atPosition(0)
                 .onChildView(withId(R.id.listview__item__title))
                 .perform(longClick());
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_tag_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.activity__item__list__add__tag__button)).perform(click());
 
         onView(allOf(withText(testTagName), isDescendantOfA(withId(chipGroupID))))
                 .perform(click());
@@ -316,7 +316,7 @@ public class TagItemTest {
 
     @Test
     public void deleteItem(){
-        int listViewId = R.id.activity_item_list_item_list;
+        int listViewId = R.id.activity__item__list__item__list;
         SystemClock.sleep(2000);
 
         onData(Matchers.anything())
@@ -325,8 +325,8 @@ public class TagItemTest {
                 .onChildView(withId(R.id.listview__item__title))
                 .perform(longClick());
 
-        onView(ViewMatchers.withId(R.id.activity_item_list_remove_item_button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
-        onView(ViewMatchers.withId(R.id.activity_item_list_remove_item_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.activity__item__list__remove__item__button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        onView(ViewMatchers.withId(R.id.activity__item__list__remove__item__button)).perform(click());
 
 
         final boolean[] itemBool = new boolean[1];
@@ -354,7 +354,7 @@ public class TagItemTest {
     @Test
     public void deleteTagCascade(){
         //add tag to item first
-        int listViewId = R.id.activity_item_list_item_list;
+        int listViewId = R.id.activity__item__list__item__list;
         SystemClock.sleep(2000);
 
         onData(Matchers.anything())
@@ -362,8 +362,8 @@ public class TagItemTest {
                 .atPosition(0)
                 .onChildView(withId(R.id.listview__item__title))
                 .perform(longClick());
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_tag_button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_tag_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.activity__item__list__add__tag__button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        onView(ViewMatchers.withId(R.id.activity__item__list__add__tag__button)).perform(click());
         int chipGroupID = R.id.fragment_add_tag_to_item_tag_chipGroup;
 
         onView(allOf(withText(testTagName), isDescendantOfA(withId(chipGroupID))))
@@ -421,7 +421,7 @@ public class TagItemTest {
     @Test
     public void RefreshTagsFromAddTags(){
         //checks refresh button on addTag Dialog by long selecting refreshes
-        int listViewId = R.id.activity_item_list_item_list;
+        int listViewId = R.id.activity__item__list__item__list;
         SystemClock.sleep(2000);
 
         onData(Matchers.anything())
@@ -429,8 +429,8 @@ public class TagItemTest {
                 .atPosition(0)
                 .onChildView(withId(R.id.listview__item__title))
                 .perform(longClick());
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_tag_button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_tag_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.activity__item__list__add__tag__button)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        onView(ViewMatchers.withId(R.id.activity__item__list__add__tag__button)).perform(click());
         onView(ViewMatchers.withId(R.id.fragment_add_tag_to_item_make_new_tag_button)).perform(click());
         onView(ViewMatchers.withId(R.id.activity_tag_list_listView)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
         int deleteButtonId = R.id.listview_delete_tag_button;
@@ -458,64 +458,64 @@ public class TagItemTest {
     @Test
     public void addItemWithTags(){
         SystemClock.sleep(2000);
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_item_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.activity__item__list__edit__item__button)).perform(click());
 
         //title
-        onView(ViewMatchers.withId(R.id.add_item_fragment_edit_title)).perform(click());
-        onView(withId(R.id.add_item_fragment_edit_title))
+        onView(ViewMatchers.withId(R.id.add__item__fragment__edit__title)).perform(click());
+        onView(withId(R.id.add__item__fragment__edit__title))
                 .perform(ViewActions.typeText("TestItem2"));
         closeSoftKeyboard();
 
         //make
-        onView(ViewMatchers.withId(R.id.add_item_fragment_edit_make)).perform(click());
-        onView(withId(R.id.add_item_fragment_edit_make))
+        onView(ViewMatchers.withId(R.id.add__item__fragment__edit__make)).perform(click());
+        onView(withId(R.id.add__item__fragment__edit__make))
                 .perform(ViewActions.typeText("Make1"));
         closeSoftKeyboard();
 
         //model
-        onView(ViewMatchers.withId(R.id.add_item_fragment_edit_model)).perform(click());
-        onView(withId(R.id.add_item_fragment_edit_model))
+        onView(ViewMatchers.withId(R.id.add__item__fragment__edit__model)).perform(click());
+        onView(withId(R.id.add__item__fragment__edit__model))
                 .perform(ViewActions.typeText("Model1"));
         closeSoftKeyboard();
 
         //description
-        onView(ViewMatchers.withId(R.id.add_item_fragment_edit_description)).perform(click());
-        onView(withId(R.id.add_item_fragment_edit_description))
+        onView(ViewMatchers.withId(R.id.add__item__fragment__edit__description)).perform(click());
+        onView(withId(R.id.add__item__fragment__edit__description))
                 .perform(ViewActions.typeText("Description1"));
         closeSoftKeyboard();
 
         //Year month day
-        onView(ViewMatchers.withId(R.id.add_item_fragment_edit_year)).perform(click());
-        onView(withId(R.id.add_item_fragment_edit_year))
+        onView(ViewMatchers.withId(R.id.add__item__fragment__edit__year)).perform(click());
+        onView(withId(R.id.add__item__fragment__edit__year))
                 .perform(ViewActions.typeText("2022"));
         closeSoftKeyboard();
 
-        onView(ViewMatchers.withId(R.id.add_item_fragment_edit_month)).perform(click());
-        onView(withId(R.id.add_item_fragment_edit_month))
+        onView(ViewMatchers.withId(R.id.add__item__fragment__edit__month)).perform(click());
+        onView(withId(R.id.add__item__fragment__edit__month))
                 .perform(ViewActions.typeText("03"));
         closeSoftKeyboard();
 
-        onView(ViewMatchers.withId(R.id.add_item_fragment_edit_date)).perform(click());
-        onView(withId(R.id.add_item_fragment_edit_date))
+        onView(ViewMatchers.withId(R.id.add__item__fragment__edit__date)).perform(click());
+        onView(withId(R.id.add__item__fragment__edit__date))
                 .perform(ViewActions.typeText("11"));
         closeSoftKeyboard();
 
         //Value
-        onView(ViewMatchers.withId(R.id.add_item_fragment_edit_value)).perform(click());
-        onView(withId(R.id.add_item_fragment_edit_value))
+        onView(ViewMatchers.withId(R.id.add__item__fragment__edit__value)).perform(click());
+        onView(withId(R.id.add__item__fragment__edit__value))
                 .perform(ViewActions.typeText("55"));
         closeSoftKeyboard();
 
         //tag
-        int chipGroupID = R.id.add_item_fragment_chipGroup;
+        int chipGroupID = R.id.add__item__fragment__chipGroup;
 
         onView(allOf(withText(testTagName), isDescendantOfA(withId(chipGroupID))))
                 .perform(click());
         //Serial number
-        onView(withId(R.id.add_item_fragment_edit_serial))
+        onView(withId(R.id.add__item__fragment__edit__serial))
                 .perform(ViewActions.scrollTo());
-        onView(ViewMatchers.withId(R.id.add_item_fragment_edit_serial)).perform(click());
-        onView(withId(R.id.add_item_fragment_edit_serial))
+        onView(ViewMatchers.withId(R.id.add__item__fragment__edit__serial)).perform(click());
+        onView(withId(R.id.add__item__fragment__edit__serial))
                 .perform(ViewActions.typeText("98765"));
         closeSoftKeyboard();
 
@@ -558,7 +558,7 @@ public class TagItemTest {
     @Test
     public void addItemRefreshTags(){
         SystemClock.sleep(2000);
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_item_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.activity__item__list__edit__item__button)).perform(click());
         int tagListViewId = R.id.activity_tag_list_listView;
         int deleteButtonId = R.id.listview_delete_tag_button;
 
@@ -578,9 +578,11 @@ public class TagItemTest {
 
         //Click on refresh button
         onView(ViewMatchers.withId(R.id.add_item_fragment_refresh_tags_button)).perform(click());
+//
+//        //Check to see that chipGroup is empty
 
-        //Check to see that chipGroup is empty
-        onView(withId(R.id.add_item_fragment_chipGroup))
+
+        onView(withId(R.id.add__item__fragment__chipGroup))
                 .check((view, noViewFoundException) -> {
                     if (view instanceof ChipGroup) {
                         ChipGroup chipGroup = (ChipGroup) view;
@@ -595,10 +597,10 @@ public class TagItemTest {
     @Test
     public void addItemToTagList(){
         //click on item, click add tags, click back
-        int listViewId = R.id.activity_item_list_item_list;
+        int listViewId = R.id.activity__item__list__item__list;
         SystemClock.sleep(2000);
 
-        onView(ViewMatchers.withId(R.id.activity_item_list_add_item_button)).perform(click());
+        onView(ViewMatchers.withId(R.id.activity__item__list__edit__item__button)).perform(click());
 
         //Click to add tag on tagList View
         onView(ViewMatchers.withId(R.id.add_item_fragment_add_tag_button)).perform(click());
@@ -613,7 +615,7 @@ public class TagItemTest {
     @Test
     public void editItemCheckTags(){
         //add tag, and look at it again to make sure that the tag is checked
-        int listViewId = R.id.activity_item_list_item_list;
+        int listViewId = R.id.activity__item__list__item__list;
         SystemClock.sleep(2000);
 
         onData(Matchers.anything())
@@ -622,9 +624,9 @@ public class TagItemTest {
                 .onChildView(withId(R.id.listview__item__title))
                 .perform(click());
 
-        onView(ViewMatchers.withId(R.id.add_item_fragment_edit_title)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        onView(ViewMatchers.withId(R.id.add__item__fragment__edit__title)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
-        int chipGroupID = R.id.add_item_fragment_chipGroup;
+        int chipGroupID = R.id.add__item__fragment__chipGroup;
 
         onView(allOf(withText(testTagName), isDescendantOfA(withId(chipGroupID))))
                 .perform(click());
@@ -648,7 +650,7 @@ public class TagItemTest {
     @Test
     public void editItemUnselectTags(){
         //add tag, click on item, unselect tag
-        int listViewId = R.id.activity_item_list_item_list;
+        int listViewId = R.id.activity__item__list__item__list;
         SystemClock.sleep(2000);
 
         onData(Matchers.anything())
@@ -657,9 +659,9 @@ public class TagItemTest {
                 .onChildView(withId(R.id.listview__item__title))
                 .perform(click());
 
-        onView(ViewMatchers.withId(R.id.add_item_fragment_edit_title)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
+        onView(ViewMatchers.withId(R.id.add__item__fragment__edit__title)).check(ViewAssertions.matches(ViewMatchers.isDisplayed()));
 
-        int chipGroupID = R.id.add_item_fragment_chipGroup;
+        int chipGroupID = R.id.add__item__fragment__chipGroup;
 
         onView(allOf(withText(testTagName), isDescendantOfA(withId(chipGroupID))))
                 .perform(click());
@@ -710,8 +712,8 @@ public class TagItemTest {
 
     @Test
     public void editItemToTagList(){
-        //click on item, click add tags, click back
-        int listViewId = R.id.activity_item_list_item_list;
+        //click on item, click add tags, click back 
+        int listViewId = R.id.activity__item__list__item__list;
         SystemClock.sleep(2000);
 
         onData(Matchers.anything())
@@ -731,7 +733,7 @@ public class TagItemTest {
     @Test
     public void editItemToRefreshButton(){
         //click on item, click add tags, click back
-        int listViewId = R.id.activity_item_list_item_list;
+        int listViewId = R.id.activity__item__list__item__list;
         int tagListViewId = R.id.activity_tag_list_listView;
         int deleteButtonId = R.id.listview_delete_tag_button;
 
@@ -761,7 +763,7 @@ public class TagItemTest {
         onView(ViewMatchers.withId(R.id.add_item_fragment_refresh_tags_button)).perform(click());
 
         //Check to see that chipGroup is empty
-        onView(withId(R.id.add_item_fragment_chipGroup))
+        onView(withId(R.id.add__item__fragment__chipGroup))
                 .check((view, noViewFoundException) -> {
                     if (view instanceof ChipGroup) {
                         ChipGroup chipGroup = (ChipGroup) view;
